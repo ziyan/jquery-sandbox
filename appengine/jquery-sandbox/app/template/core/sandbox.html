@@ -1,0 +1,14 @@
+{% extends 'html.html' %}
+
+{% block head %}
+<script src="{{ settings.STATIC_URL }}/static/js/sandbox.{{ settings.VERSION }}.js" type="text/javascript"></script>
+<script type="text/javascript">
+$.extend(true, $.sandbox.defaults, {
+  debug: {{ settings.DEBUG|yesno('true', 'false') }},
+  url: '/static/js/worker.{{ settings.VERSION }}.js'
+});
+</script>
+{% endblock %}
+
+{% block body %}  
+{% endblock %}

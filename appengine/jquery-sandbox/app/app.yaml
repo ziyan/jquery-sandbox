@@ -17,6 +17,18 @@ handlers:
   expiration: "365d"
   secure: optional
 
+- url: /static/js/sandbox\.[0-9a-f]+\.js
+  static_files: static/js/sandbox.min.js
+  upload: static/js/sandbox.min.js
+  expiration: "365d"
+  secure: optional
+
+- url: /static/js/worker\.[0-9a-f]+\.js
+  static_files: static/js/worker.min.js
+  upload: static/js/worker.min.js
+  expiration: "365d"
+  secure: optional
+
 - url: /static/img/
   static_dir: static/img/
   expiration: "365d"

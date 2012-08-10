@@ -1,11 +1,8 @@
 from core import filters
-from functools import wraps
 import webapp2
 import jinja2
 import os
-import uuid
 import settings
-import datetime
 
 jinja_template_path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'template'))
 jinja_loader = jinja2.FileSystemLoader(jinja_template_path)

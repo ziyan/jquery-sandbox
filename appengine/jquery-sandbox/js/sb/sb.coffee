@@ -28,6 +28,5 @@ sb.namespace 'sb.settings', (exports) ->
 $ ->
   sb.settings.initialize()
 
-  $('*[title]').livequery ->
-    $(this).tooltip
-      placement: 'bottom'
+  $('*[title]').tooltip
+    placement: 'bottom'
