@@ -1,4 +1,5 @@
 from core import filters
+from functools import wraps
 import webapp2
 import jinja2
 import os
@@ -20,8 +21,6 @@ jinja_environment = jinja2.Environment(
 )
 jinja_environment.filters.update({
     'yesno': filters.yesno,
-    'lines': filters.lines,
-    'timestamp': filters.timestamp,
 })
 jinja_globals = {
     'webapp2': webapp2,
@@ -46,3 +45,14 @@ class View(webapp2.RequestHandler):
 
     def render(self, template, context=None):
         self.response.out.write(self.render_to_str(template, context))
+
+def cache_control(max_age=None):
+    def actual(function):
+        @wraps(function)
+        def wrapper(self, *args, **kwargs):
+            if max_age:
+                self.response.headers['Cache-Control'] = 'max-age=%d' % max_age
+            return function(self, *args, **kwargs)
+        return wrapper
+    return actual
+

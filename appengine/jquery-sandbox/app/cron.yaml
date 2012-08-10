@@ -1,4 +1,4 @@
 cron:
 - description: keepalive
-  url: /
+  url: /keepalive/
   schedule: every 2 mins
