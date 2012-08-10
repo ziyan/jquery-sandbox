@@ -1,0 +1,41 @@
+application: jquery-sandbox
+version: 0-0-1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /static/js/sb\.[0-9a-f]+\.js
+  static_files: static/js/sb.min.js
+  upload: static/js/sb.min.js
+  expiration: "365d"
+  secure: optional
+
+- url: /static/css/sb\.[0-9a-f]+\.css
+  static_files: static/css/sb.min.css
+  upload: static/css/sb.min.css
+  expiration: "365d"
+  secure: optional
+
+- url: /static/img/
+  static_dir: static/img/
+  expiration: "365d"
+  secure: optional
+
+- url: .*
+  script: wsgi.app
+  secure: optional
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
+- name: django
+  version: latest
+
+builtins:
+- appstats: on
+
+inbound_services:
+- warmup

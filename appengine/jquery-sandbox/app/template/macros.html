@@ -1,0 +1,6 @@
+{% macro linebreaks(text) %}
+{% for p in text|lines %}
+<p>{% for l in p %}{{ l }}<br/>{% endfor %}</p>
+{% endfor %}
+{% endmacro %}
+

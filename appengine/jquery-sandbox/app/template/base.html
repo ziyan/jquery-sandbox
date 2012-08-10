@@ -1,0 +1,27 @@
+{% extends 'html.html' %}
+
+{% block title %}{% block subtitle %}{% endblock %}jquery-sandbox{% endblock %}
+
+{% block head %}
+  <link href="{{ settings.STATIC_URL }}/static/css/sb.{{ settings.VERSION }}.css" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block body %}
+<div class="content">
+{% block content %}{% endblock %}
+</div>
+
+<footer>
+<div class="container">
+<hr>
+<p>&copy; jquery-sandbox</p>
+</div>
+</footer>
+
+{% include 'inc/settings.inc.html' %}
+
+<script src="{{ settings.STATIC_URL }}/static/js/sb.{{ settings.VERSION }}.js" type="text/javascript"></script>
+
+{% endblock %}
