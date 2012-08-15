@@ -12,9 +12,7 @@
       request = jsonParse e.data
       for script in request.scripts
         importScripts script
-        delete self.onmessage
     catch error
-      delete self.onmessage
       postMessage jsonStringify
         error: error or null
 
@@ -26,8 +24,7 @@
   self.addEventListener 'message', handler, false
 
   # undefine unsafe functions
-  self.Woker = undefined
-  self.importScripts = undefined
-  self.ActiveXObject = undefined
+  self.Worker = undefined
 
 ) self
+

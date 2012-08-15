@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jquery-sandbox</title>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.sandbox.js"></script>
+<script type="text/javascript">
+$(function() {
+    var script = "setTimeout(function(){postMessage('Test!');}, 1000);";
+
+    var sandbox = $.sandbox({
+        url: 'sandbox.html',
+        scripts: ['data:application/javascript,' + encodeURIComponent(script)],
+        callback: function (data, error) {
+            console.log(error || data);
+            this.terminate();
+        }
+    });
+});
+</script>
+</head>
+<body>
+
+</body>
+</html>

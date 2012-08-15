@@ -7,14 +7,12 @@
 
 # Project specifics #
 #####################
-settings_*.py
-appengine/jquery-sandbox/static/css
-appengine/jquery-sandbox/static/js
+build/
+
 *.coffee.js
 *.min.js
 *.sass.css
 *.min.css
-.sass-cache
 
 # Logs and databases #
 ######################
