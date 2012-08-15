@@ -1,38 +1,48 @@
-WORKER_TARGET = build/worker.js
-WORKER_SOURCES = \
-	js/json2.js \
-	js/worker.coffee.js \
+WORKER_JS_TARGET = build/worker.js
+WORKER_JS_SOURCES = \
+	src/js/json2.js \
+	src/js/worker.coffee.js \
 
-SANDBOX_TARGET = build/sandbox.js
-SANDBOX_SOURCES = \
-	js/json2.js \
-	js/sandbox.coffee.js \
+SANDBOX_JS_TARGET = build/sandbox.js
+SANDBOX_JS_SOURCES = \
+	src/js/json2.js \
+	src/js/sandbox.coffee.js \
 
-JQUERY_SANDBOX_TARGET = build/jquery.sandbox.js
-JQUERY_SANDBOX_SOURCES = \
-	js/jquery.sandbox.coffee.js \
+JQUERY_SANDBOX_JS_TARGET = build/jquery.sandbox.js
+JQUERY_SANDBOX_JS_SOURCES = \
+	src/js/jquery.sandbox.coffee.js \
+
+SANDBOX_HTML_TARGET = build/sandbox.html
+SANDBOX_HTML_SOURCES = \
+	src/html/sandbox.header.html \
+	build/sandbox.min.js \
+	src/html/sandbox.footer.html \
+
+TEST_HTML_TARGET = build/test.html
+TEST_HTML_SOURCES = \
+	src/html/test.html \
 
 all: build/jquery.sandbox.min.js build/worker.min.js build/sandbox.html build/test.html
 
-build/test.html: html/test.html
+$(TEST_HTML_TARGET): $(TEST_HTML_SOURCES)
 	@mkdir -p build
-	@cat html/test.html > build/test.html
+	@cat $(TEST_HTML_SOURCES) > $(TEST_HTML_TARGET)
 
-build/sandbox.html: html/sandbox.header.html html/sandbox.footer.html build/sandbox.min.js
+$(SANDBOX_HTML_TARGET): $(SANDBOX_HTML_SOURCES)
 	@mkdir -p build
-	@cat html/sandbox.header.html build/sandbox.min.js html/sandbox.footer.html > build/sandbox.html
+	@cat $(SANDBOX_HTML_SOURCES) > $(SANDBOX_HTML_TARGET)
 
-$(WORKER_TARGET): $(WORKER_SOURCES)
+$(WORKER_JS_TARGET): $(WORKER_JS_SOURCES)
 	@mkdir -p build
-	@cat $(WORKER_SOURCES) > $(WORKER_TARGET)
+	@cat $(WORKER_JS_SOURCES) > $(WORKER_JS_TARGET)
 
-$(SANDBOX_TARGET): $(SANDBOX_SOURCES)
+$(SANDBOX_JS_TARGET): $(SANDBOX_JS_SOURCES)
 	@mkdir -p build
-	@cat $(SANDBOX_SOURCES) > $(SANDBOX_TARGET)
+	@cat $(SANDBOX_JS_SOURCES) > $(SANDBOX_JS_TARGET)
 
-$(JQUERY_SANDBOX_TARGET): $(JQUERY_SANDBOX_SOURCES)
+$(JQUERY_SANDBOX_JS_TARGET): $(JQUERY_SANDBOX_JS_SOURCES)
 	@mkdir -p build
-	@cat $(JQUERY_SANDBOX_SOURCES) > $(JQUERY_SANDBOX_TARGET)
+	@cat $(JQUERY_SANDBOX_JS_SOURCES) > $(JQUERY_SANDBOX_JS_TARGET)
 
 %.min.js: %.js
 	@cat $< | closure > $@
