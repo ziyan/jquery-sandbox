@@ -9,7 +9,7 @@
     parent.postMessage message, '*'
 
   Worker = self.Worker
-  return report undefined, undefined, 'unsupported' if not Worker
+  return report undefined, undefined, 'unsupported' unless Worker
 
   defaults =
     worker: 'worker.js'
@@ -56,7 +56,7 @@
       @worker.postMessage message
 
     terminate: ->
-      return if not @worker
+      return unless @worker
       clearTimeout @timer if @timer
       @timer = null
       @worker.onmessage = null
@@ -69,11 +69,12 @@
 
     if data.command is 'run'
       return report data.id, undefined, 'running' if data.id of sandboxes
-      sandbox = sandboxes[data.id] = new Sandbox(data.id, data.options)
+      sandbox = new Sandbox(data.id, data.options)
+      sandboxes[data.id] = sandbox
       sandbox.run()
 
     if data.command is 'terminate'
-      return report data.id, undefined, 'terminated' if not data.id of sandboxes
+      return report data.id, undefined, 'terminated' unless data.id of sandboxes
       sandboxes[data.id].terminate()
 
 ) window

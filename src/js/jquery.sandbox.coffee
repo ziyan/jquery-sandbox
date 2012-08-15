@@ -50,7 +50,8 @@
 
   # unload iframe when there is no more sandbox
   unload_frame = ->
-    return if not $.sandbox.frame or $.sandbox.count > 0
+    return unless $.sandbox.frame
+    return if $.sandbox.count > 0
     $(window).unbind 'message', handler
     post = post_to_queue
     $.sandbox.frame.unbind().remove()
@@ -96,7 +97,7 @@
       $.sandbox.count--
 
   $.sandbox = (options) ->
-    return null if not $.support.sandbox
+    return null unless $.support.sandbox
     sandbox = new Sandbox options
     $.sandbox.sandboxes[sandbox.id] = sandbox
     $.sandbox.count++
