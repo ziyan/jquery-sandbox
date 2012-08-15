@@ -1,27 +1,4 @@
-*.pyc
 *.bak
 *.orig
 *~
 *.swp
-*.mo
-
-# Project specifics #
-#####################
-build/
-
-*.coffee.js
-*.min.js
-*.sass.css
-*.min.css
-
-# Logs and databases #
-######################
-*.log
-*.sql
-*.sqlite
-*.db
-
-# OS generated files #
-######################
-.DS_Store*
-Icon?
