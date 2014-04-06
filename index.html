@@ -4,13 +4,11 @@
 <meta charset="utf-8">
 <title>jQuery Sandbox</title>
 <meta name="description" content="Execute untrusted headless Javascript code in a sandbox.">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
-<link href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css"rel=" stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 body
 {
-    background: white url('http://twitter.github.com/bootstrap/assets/img/grid-18px-masked.png');
+    background: white;
 }
 
 textarea
@@ -59,7 +57,7 @@ label
 <section>
 <h2>Demo</h2>
 <div class="row">
-<div class="span6">
+<div class="col-md-6">
 <p>Type some script to be executed in a sandbox. Your script will be terminated after 5 seconds.</p>
 <br/>
 <form class="form">
@@ -94,7 +92,7 @@ TwitterApi.tweet("I tweet the length of a js file: " + xhr.responseText.length);
 </div>
 </form>
 </div>
-<div class="span6">
+<div class="col-md-6">
 <h3>Output</h3>
 <p>This example will simply print out what the script has posted via <code>postMessage</code>. In your handler, you should sanitize these messages from the script and do something useful with them.</p>
 <br/>
@@ -106,7 +104,7 @@ TwitterApi.tweet("I tweet the length of a js file: " + xhr.responseText.length);
 <section>
 <h2>How does it work?</h2>
 <div class="row">
-<div class="span6">
+<div class="col-md-6">
 Quite simple, actually.
 <br/><br/>
 <ol>
@@ -145,7 +143,7 @@ This will ensure that the script cannot read your local storage, use XMLHttpRequ
 </ul>
 </p>
 </div>
-<div class="span6">
+<div class="col-md-6">
 <h3>Usage</h3>
 <p>The script does nothing until you call it via <code>$.sandbox(options)</code>.</p>
 <p><code>options</code> is a dictionary with the following keys:
@@ -181,9 +179,8 @@ $('a#terminate').click(function(e) {
 
 </div>
 
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
-<script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -246,7 +243,7 @@ $(function() {
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-34085887-1', 'ziyan.me');
+ga('create', 'UA-34085887-1', 'ziyan.net');
 ga('send', 'pageview');
 </script>
 </body>
