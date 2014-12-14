@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>jQuery Sandbox</title>
 <meta name="description" content="Execute untrusted headless Javascript code in a sandbox.">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 body
 {
@@ -129,7 +129,7 @@ This will ensure that the script cannot read your local storage, use XMLHttpRequ
 <h3>Installation</h3>
 <p>You will need the latest jQuery and this script:</p>
 <p><pre class="prettyprint">
-&lt;script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="//ziyan.github.io/jquery-sandbox/0.0.1/jquery.sandbox.js"&gt;&lt;/script&gt;
 </pre></p>
 <p>The source can be found on github: <a href="https://github.com/ziyan/jquery-sandbox/blob/master/jquery.sandbox.js">https://github.com/ziyan/jquery-sandbox/blob/master/jquery.sandbox.js</a></p>
 <p>Actually, the real source is in CoffeeScript: <a href="https://github.com/ziyan/jquery-sandbox/blob/master/src/js/jquery.sandbox.coffee">https://github.com/ziyan/jquery-sandbox/blob/master/src/js/jquery.sandbox.coffee</a></p>
@@ -149,7 +149,7 @@ This will ensure that the script cannot read your local storage, use XMLHttpRequ
 <p><code>options</code> is a dictionary with the following keys:
 <ul>
 <li><strong>scripts</strong> - Array of script URLs to be executed. You can execute scripts stored in a string directly by supplying: <code>['data:application/javascript,' + encodeURIComponent(script)]</code></li>
-<li><strong>url</strong> (optional) - Path to the sandbox iframe. Default to <code>//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/sandbox.html</code></li>
+<li><strong>url</strong> (optional) - Path to the sandbox iframe. Default to <code>//ziyan.github.io/jquery-sandbox/0.0.1/sandbox.html</code></li>
 <li><strong>timeout</strong> (optional) - Number of seconds before killing the script. Default to <code>0</code> which means no timeout</li>
 <li><strong>callback</strong> (optional) - Function to be called when the script does <code>postMessage()</code> or throws exception. Should be defined as <code>function(data, error) { ... }</code></li>
 </ul>
@@ -179,9 +179,9 @@ $('a#terminate').click(function(e) {
 
 </div>
 
-<script type="text/javascript" src="//code.jquery.com/jquery-2.1.0.min.js"></script>
-<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/jquery.sandbox.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//ziyan.github.io/jquery-sandbox/0.0.1/jquery.sandbox.js"></script>
 <script type="text/javascript">
 $(function() {
     window.prettyPrint && prettyPrint();
