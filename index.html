@@ -17,7 +17,7 @@ textarea
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
-    min-height: 380px;
+    min-height: 400px;
     resize: vertical;
 }
 
@@ -192,7 +192,7 @@ $(function() {
         message.prependTo($('form:first'));
     }
     else {
-        message = $('<div class="alert alert-error">Unfortunately, your browser does not support HTML5 Worker yet, thus jQuery Sandbox will not run.</div>');
+        message = $('<div class="alert alert-danger">Unfortunately, your browser does not support HTML5 Worker yet, thus jQuery Sandbox will not run.</div>');
         message.prependTo($('form:first'));
     }
 
@@ -223,13 +223,13 @@ $(function() {
                 }
  
                 if (error === 'timeout') {
-                    $('<div />').addClass('alert alert-error').html('Script terminated due to reaching of time limit.').appendTo(output);
+                    $('<div />').addClass('alert alert-danger').html('Script terminated due to reaching of time limit.').appendTo(output);
                     this.terminate();
                     sandbox = null;
                     return;
                 }
 
-                $('<div />').addClass('alert alert-error').html('Terminating script due to unknown error: ' + error).appendTo(output);
+                $('<div />').addClass('alert alert-danger').html('Terminating script due to unknown error: ' + error).appendTo(output);
                 this.terminate();
                 sandbox = null;
             }
