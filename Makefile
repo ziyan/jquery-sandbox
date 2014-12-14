@@ -45,7 +45,7 @@ $(JQUERY_SANDBOX_JS_TARGET): $(JQUERY_SANDBOX_JS_SOURCES)
 	@cat $(JQUERY_SANDBOX_JS_SOURCES) > $(JQUERY_SANDBOX_JS_TARGET)
 
 %.min.js: %.js
-	@cat $< | closure > $@
+	@cat $< | yui-compressor --type js > $@
 
 %.coffee.js: %.coffee
 	@cat $< | coffee -c -s > $@

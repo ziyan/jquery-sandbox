@@ -106,7 +106,7 @@
 
   $.sandbox.defaults =
     timeout: 0
-    url: '//d3ltuim8m8ytq2.cloudfront.net/jquery-sandbox/0.0.1/sandbox.html'
+    url: '//ziyan.github.io/jquery-sandbox/0.0.1/sandbox.html'
     scripts: []
     callback: (data, error) ->
       true
