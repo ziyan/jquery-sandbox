@@ -23,6 +23,8 @@ TEST_HTML_SOURCES = \
 	src/html/test.html \
 
 all: build/jquery.sandbox.min.js build/worker.min.js build/sandbox.html build/test.html
+	@cp build/jquery.sandbox.js .
+	@cp build/jquery.sandbox.min.js .
 
 $(TEST_HTML_TARGET): $(TEST_HTML_SOURCES)
 	@mkdir -p build
@@ -51,6 +53,5 @@ $(JQUERY_SANDBOX_JS_TARGET): $(JQUERY_SANDBOX_JS_SOURCES)
 	@cat $< | coffee -c -s > $@
 
 clean:
-	@find . -iname \*.coffee.js -exec rm -f {} \;
-	@find . -iname \*.min.js -exec rm -f {} \;
+	@find src -iname \*.coffee.js -exec rm -f {} \;
 	@rm -rf build
